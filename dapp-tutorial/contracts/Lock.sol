@@ -1,34 +1,23 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
-
+import "../node_modules/hardhat/console.sol";
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
-contract Lock {
-    uint public unlockTime;
-    address payable public owner;
+contract Greeter {
+  string greeting;
 
-    event Withdrawal(uint amount, uint when);
+  constructor(string memory _greeting) {
+    console.log("Deploying a Greeter with greeting:", _greeting);
+    greeting = _greeting;
+  }
 
-    constructor(uint _unlockTime) payable {
-        require(
-            block.timestamp < _unlockTime,
-            "Unlock time should be in the future"
-        );
+  function greet() public view returns (string memory) {
+    return greeting;
+  }
 
-        unlockTime = _unlockTime;
-        owner = payable(msg.sender);
-    }
-
-    function withdraw() public {
-        // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
-        // console.log("Unlock time is %o and block timestamp is %o", unlockTime, block.timestamp);
-
-        require(block.timestamp >= unlockTime, "You can't withdraw yet");
-        require(msg.sender == owner, "You aren't the owner");
-
-        emit Withdrawal(address(this).balance, block.timestamp);
-
-        owner.transfer(address(this).balance);
-    }
+  function setGreeting(string memory _greeting) public {
+    console.log("Changing greeting from '%s' to '%s'", greeting, _greeting);
+    greeting = _greeting;
+  }
 }
